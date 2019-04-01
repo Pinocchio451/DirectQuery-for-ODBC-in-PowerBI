@@ -1,9 +1,9 @@
 ﻿// This file contains your Data Connector logic
-section OpenAccessODBC;
+section ODBCDirect;
 
 /* This is the method for connection to ODBC*/
-[DataSource.Kind="OpenAccessODBC", Publish="OpenAccessODBC.Publish"]
-shared OpenAccessODBC.Database = (dsn as text) as table =>
+[DataSource.Kind="ODBCDirect", Publish="ODBCDirect.Publish"]
+shared ODBCDirect.Database = (dsn as text) as table =>
       let
         //
         // Connection string settings
@@ -56,14 +56,14 @@ shared OpenAccessODBC.Database = (dsn as text) as table =>
 
 
 // Data Source Kind description
-OpenAccessODBC = [
+ODBCDirect = [
  // Test Connection
     TestConnection = (dataSourcePath) => 
         let
             json = Json.Document(dataSourcePath),
             dsn = json[dsn]
         in
-            { "OpenAccessODBC.Database", dsn}, 
+            { "ODBCDirect.Database", dsn}, 
  // Authentication Type
     Authentication = [
         UsernamePassword = [],
@@ -73,18 +73,18 @@ OpenAccessODBC = [
 ];
 
 // Data Source UI publishing description
-OpenAccessODBC.Publish = [
+ODBCDirect.Publish = [
     Category = "Database",
     ButtonText = { Extension.LoadString("ButtonTitle"), Extension.LoadString("ButtonHelp") },
     LearnMoreUrl = "https://powerbi.microsoft.com/",
-    SourceImage = OpenAccessODBC.Icons,
-    SourceTypeImage = OpenAccessODBC.Icons,
+    SourceImage = ODBCDirect.Icons,
+    SourceTypeImage = ODBCDirect.Icons,
     // This is for Direct Query Support
     SupportsDirectQuery = true
 ];
 
-OpenAccessODBC.Icons = [
-    Icon16 = { Extension.Contents("OpenAccessODBC16.png"), Extension.Contents("OpenAccessODBC20.png"), Extension.Contents("OpenAccessODBC24.png"), Extension.Contents("OpenAccessODBC32.png") },
-    Icon32 = { Extension.Contents("OpenAccessODBC32.png"), Extension.Contents("OpenAccessODBC40.png"), Extension.Contents("OpenAccessODBC48.png"), Extension.Contents("OpenAccessODBC64.png") }
+ODBCDirect.Icons = [
+    Icon16 = { Extension.Contents("ODBCDirect16.png"), Extension.Contents("ODBCDirect20.png"), Extension.Contents("ODBCDirect24.png"), Extension.Contents("ODBCDirect32.png") },
+    Icon32 = { Extension.Contents("ODBCDirect32.png"), Extension.Contents("ODBCDirect40.png"), Extension.Contents("ODBCDirect48.png"), Extension.Contents("ODBCDirect64.png") }
 ];
 

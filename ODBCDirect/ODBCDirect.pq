@@ -1,9 +1,9 @@
 ﻿// This file contains your Data Connector logic
-section OpenAccessODBC;
+section ODBCDirect;
 
 /* This is the method for connection to ODBC*/
-[DataSource.Kind="OpenAccessODBC", Publish="OpenAccessODBC.Publish"]
-shared OpenAccessODBC.Database = (dsn as text) as table =>
+[DataSource.Kind="ODBCDirect", Publish="ODBCDirect.Publish"]
+shared ODBCDirect.Database = (dsn as text) as table =>
       let
         //
         // Connection string settings
@@ -56,14 +56,14 @@ shared OpenAccessODBC.Database = (dsn as text) as table =>
 
 
 // Data Source Kind description
-OpenAccessODBC = [
+ODBCDirect = [
  // Test Connection
     TestConnection = (dataSourcePath) => 
         let
             json = Json.Document(dataSourcePath),
             dsn = json[dsn]
         in
-            { "OpenAccessODBC.Database", dsn}, 
+            { "ODBCDirect.Database", dsn}, 
  // Authentication Type
     Authentication = [
         UsernamePassword = [],
@@ -73,12 +73,12 @@ OpenAccessODBC = [
 ];
 
 // Data Source UI publishing description
-OpenAccessODBC.Publish = [
+ODBCDirect.Publish = [
     Category = "Database",
     ButtonText = { Extension.LoadString("ButtonTitle"), Extension.LoadString("ButtonHelp") },
     LearnMoreUrl = "https://powerbi.microsoft.com/",
-    SourceImage = OpenAccessODBC.Icons,
-    SourceTypeImage = OpenAccessODBC.Icons,
+    SourceImage = ODBCDirect.Icons,
+    SourceTypeImage = ODBCDirect.Icons,
     // This is for Direct Query Support
     SupportsDirectQuery = true
 ];

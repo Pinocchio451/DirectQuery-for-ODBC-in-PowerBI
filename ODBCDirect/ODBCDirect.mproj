@@ -19,7 +19,7 @@
     <SuppressCellErrors>False</SuppressCellErrors>
     <MaxRows>1000</MaxRows>
     <ExtensionProject>Yes</ExtensionProject>
-    <Name>OpenAccessODBC</Name>
+    <Name>ODBCDirect</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>false</DebugSymbols>
@@ -37,37 +37,37 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OpenAccessODBC.pq">
+    <Compile Include="ODBCDirect.pq">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="OpenAccessODBC16.png">
+    <Compile Include="ODBCDirect16.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="OpenAccessODBC20.png">
+    <Compile Include="ODBCDirect20.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="OpenAccessODBC24.png">
+    <Compile Include="ODBCDirect24.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="OpenAccessODBC32.png">
+    <Compile Include="ODBCDirect32.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="OpenAccessODBC40.png">
+    <Compile Include="ODBCDirect40.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="OpenAccessODBC48.png">
+    <Compile Include="ODBCDirect48.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="OpenAccessODBC64.png">
+    <Compile Include="ODBCDirect64.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="OpenAccessODBC80.png">
+    <Compile Include="ODBCDirect80.png">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="resources.resx">
       <SubType>Code</SubType>
     </Compile>
-    <Content Include="OpenAccessODBC.query.pq">
+    <Content Include="ODBCDirect.query.pq">
       <SubType>Code</SubType>
     </Content>
   </ItemGroup>

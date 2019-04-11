@@ -9,5 +9,7 @@ Full write up and how-to incoming soon.
 Contact me on linkedin or via email for support / features / comments etc. 
 
 Scott Goley
+
 LinkedIn: https://www.linkedin.com/in/sgoley/
+
 Email: scottmgoley@gmail.com

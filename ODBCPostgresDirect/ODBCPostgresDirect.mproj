@@ -19,7 +19,7 @@
     <SuppressCellErrors>False</SuppressCellErrors>
     <MaxRows>1000</MaxRows>
     <ExtensionProject>Yes</ExtensionProject>
-    <Name>ODBCDirect</Name>
+    <Name>ODBCPostgresDirect</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>false</DebugSymbols>
@@ -37,31 +37,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ODBCDirect.pq">
+    <Compile Include="ODBCPostgresDirect.pq">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ODBCDirect16.png">
+    <Compile Include="ODBCPostgresDirect16.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ODBCDirect20.png">
+    <Compile Include="ODBCPostgresDirect20.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ODBCDirect24.png">
+    <Compile Include="ODBCPostgresDirect24.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ODBCDirect32.png">
+    <Compile Include="ODBCPostgresDirect32.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ODBCDirect40.png">
+    <Compile Include="ODBCPostgresDirect40.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ODBCDirect48.png">
+    <Compile Include="ODBCPostgresDirect48.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ODBCDirect64.png">
+    <Compile Include="ODBCPostgresDirect64.png">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ODBCDirect80.png">
+    <Compile Include="ODBCPostgresDirect80.png">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="resources.resx">
@@ -73,7 +73,7 @@
     <Compile Include="OdbcConstants.pqm">
       <SubType>Content</SubType>
     </Compile>
-    <Content Include="ODBCDirect.query.pq">
+    <Content Include="ODBCPostgresDirect.query.pq">
       <SubType>Code</SubType>
     </Content>
   </ItemGroup>

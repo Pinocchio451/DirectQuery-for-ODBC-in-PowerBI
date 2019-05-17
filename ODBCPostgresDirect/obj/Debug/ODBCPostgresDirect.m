@@ -1,5 +1,5 @@
 ﻿// This file contains your Data Connector logic
-section ODBCDirect;
+section ODBCPostgresDirect;
 
 // When set to true, additional trace information will be written out to the User log. 
 // This should be set to false before release. Tracing is done through a call to 
@@ -23,8 +23,8 @@ Config_EnableDirectQuery = true;    // true, false
 
 
 /* This is the method for connection to ODBC*/
-[DataSource.Kind="ODBCDirect", Publish="ODBCDirect.UI"]
-shared ODBCDirect.Database = (dsn as text) as table =>
+[DataSource.Kind="ODBCPostgresDirect", Publish="ODBCPostgresDirect.UI"]
+shared ODBCPostgresDirect.Database = (dsn as text) as table =>
       let
         //
         // Connection string settings
@@ -202,14 +202,14 @@ shared ODBCDirect.Database = (dsn as text) as table =>
 
 
 // Data Source Kind description
-ODBCDirect = [
+ODBCPostgresDirect = [
  // Test Connection
     TestConnection = (dataSourcePath) => 
         let
             json = Json.Document(dataSourcePath),
             dsn = json[dsn]
         in
-            { "ODBCDirect.Database", dsn}, 
+            { "ODBCPostgresDirect.Database", dsn}, 
  // Authentication Type
     Authentication = [
         UsernamePassword = [],
@@ -219,19 +219,19 @@ ODBCDirect = [
 ];
 
 // Data Source UI publishing description
-ODBCDirect.UI = [
+ODBCPostgresDirect.UI = [
     Category = "Database",
     ButtonText = { Extension.LoadString("ButtonTitle"), Extension.LoadString("ButtonHelp") },
     LearnMoreUrl = "https://powerbi.microsoft.com/",
-    SourceImage = ODBCDirect.Icons,
-    SourceTypeImage = ODBCDirect.Icons,
+    SourceImage = ODBCPostgresDirect.Icons,
+    SourceTypeImage = ODBCPostgresDirect.Icons,
     // This is for Direct Query Support
     SupportsDirectQuery = true
 ];
 
-ODBCDirect.Icons = [
-    Icon16 = { Extension.Contents("ODBCDirect16.png"), Extension.Contents("ODBCDirect20.png"), Extension.Contents("ODBCDirect24.png"), Extension.Contents("ODBCDirect32.png") },
-    Icon32 = { Extension.Contents("ODBCDirect32.png"), Extension.Contents("ODBCDirect40.png"), Extension.Contents("ODBCDirect48.png"), Extension.Contents("ODBCDirect64.png") }
+ODBCPostgresDirect.Icons = [
+    Icon16 = { Extension.Contents("ODBCPostgresDirect16.png"), Extension.Contents("ODBCPostgresDirect20.png"), Extension.Contents("ODBCPostgresDirect24.png"), Extension.Contents("ODBCPostgresDirect32.png") },
+    Icon32 = { Extension.Contents("ODBCPostgresDirect32.png"), Extension.Contents("ODBCPostgresDirect40.png"), Extension.Contents("ODBCPostgresDirect48.png"), Extension.Contents("ODBCPostgresDirect64.png") }
 ];
 
 // build settings based on configuration variables

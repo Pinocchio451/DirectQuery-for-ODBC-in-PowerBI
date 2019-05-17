@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{4DF76451-A46A-4C0B-BE03-459FAAFA07E6}") = "ODBCDirect", "ODBCDirect\ODBCDirect.mproj", "{73B6112C-7BD0-4C93-8C4B-4ED52D9EEBBB}"
+Project("{4DF76451-A46A-4C0B-BE03-459FAAFA07E6}") = "ODBCMySQLDirect", "ODBCMySQLDirect\ODBCMySQLDirect.mproj", "{75BF9BCF-EAE2-45DB-A23D-D3BC7C38A211}"
+EndProject
+Project("{4DF76451-A46A-4C0B-BE03-459FAAFA07E6}") = "ODBCPostgresDirect", "ODBCPostgresDirect\ODBCPostgresDirect.mproj", "{22CE2C1D-4F1E-4D41-AA3E-2BFD5E4C488D}"
+EndProject
+Project("{4DF76451-A46A-4C0B-BE03-459FAAFA07E6}") = "ODBCSQLDirect", "ODBCSQLDirect\ODBCSQLDirect.mproj", "{9783305D-C886-4492-BE6E-21ECE08158BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +15,18 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{73B6112C-7BD0-4C93-8C4B-4ED52D9EEBBB}.Debug|x86.ActiveCfg = Debug|x86
-		{73B6112C-7BD0-4C93-8C4B-4ED52D9EEBBB}.Debug|x86.Build.0 = Debug|x86
-		{73B6112C-7BD0-4C93-8C4B-4ED52D9EEBBB}.Release|x86.ActiveCfg = Release|x86
-		{73B6112C-7BD0-4C93-8C4B-4ED52D9EEBBB}.Release|x86.Build.0 = Release|x86
+		{75BF9BCF-EAE2-45DB-A23D-D3BC7C38A211}.Debug|x86.ActiveCfg = Debug|x86
+		{75BF9BCF-EAE2-45DB-A23D-D3BC7C38A211}.Debug|x86.Build.0 = Debug|x86
+		{75BF9BCF-EAE2-45DB-A23D-D3BC7C38A211}.Release|x86.ActiveCfg = Release|x86
+		{75BF9BCF-EAE2-45DB-A23D-D3BC7C38A211}.Release|x86.Build.0 = Release|x86
+		{22CE2C1D-4F1E-4D41-AA3E-2BFD5E4C488D}.Debug|x86.ActiveCfg = Debug|x86
+		{22CE2C1D-4F1E-4D41-AA3E-2BFD5E4C488D}.Debug|x86.Build.0 = Debug|x86
+		{22CE2C1D-4F1E-4D41-AA3E-2BFD5E4C488D}.Release|x86.ActiveCfg = Release|x86
+		{22CE2C1D-4F1E-4D41-AA3E-2BFD5E4C488D}.Release|x86.Build.0 = Release|x86
+		{9783305D-C886-4492-BE6E-21ECE08158BD}.Debug|x86.ActiveCfg = Debug|x86
+		{9783305D-C886-4492-BE6E-21ECE08158BD}.Debug|x86.Build.0 = Debug|x86
+		{9783305D-C886-4492-BE6E-21ECE08158BD}.Release|x86.ActiveCfg = Release|x86
+		{9783305D-C886-4492-BE6E-21ECE08158BD}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

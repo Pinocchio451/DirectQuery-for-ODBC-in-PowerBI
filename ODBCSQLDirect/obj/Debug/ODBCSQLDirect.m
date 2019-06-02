@@ -7,9 +7,9 @@ section ODBCSQLDirect;
 // no-op and simply returns the original value.
 EnableTraceOutput = true;
 
-Config_DriverName = "SQL Server";
+Config_DriverName = "ODBC Driver 17 for SQL Server";
 Config_SqlConformance = 8;  // (SQL_SC) null, 1, 2, 4, 8
-Config_GroupByCapabilities = 4; // (SQL_GB) 0, 1, 2, 3, 4
+Config_GroupByCapabilities = 2; // (SQL_GB) 0, 1, 2, 3, 4
 Config_FractionalSecondsScale = 3; //set
 Config_SupportsTop = true; // true, false
 Config_DefaultUsernamePasswordHandling = true;  // true, false
@@ -30,12 +30,12 @@ shared ODBCSQLDirect.Database = (dsn as text) as table =>
         // Connection string settings
         //
         ConnectionString = [
-            DSN=dsn
-        ],
+           DSN=dsn
+           ],
 
         //
         // Handle credentials
-        // Credentials are not persisted with the query and are set through a separate 
+        // Credentials are not persisted with the query and are set through a separate f
         // record field - CredentialConnectionString. The base Odbc.DataSource function
         // will handle UsernamePassword authentication automatically, but it is explictly
         // handled here as an example. 
@@ -43,9 +43,9 @@ shared ODBCSQLDirect.Database = (dsn as text) as table =>
         Credential = Extension.CurrentCredential(),
         encryptionEnabled = Credential[EncryptConnection]? = true,
 		CredentialConnectionString = [
-            SSLMode = if encryptionEnabled then "verify-full" else "require",
+
             UID = Credential[Username],
-            PWD = Credential[Password],
+         PWD = Credential[Password],
             BoolsAsChar = 0,
             MaxVarchar = 65535
         ],
@@ -53,7 +53,7 @@ shared ODBCSQLDirect.Database = (dsn as text) as table =>
     
         SqlCapabilities = defaultConfig[SqlCapabilities] & [
         //add additional non-configuration handled overrides here
-        GroupByCapabilities = 2
+
         ],
         SQLGetInfo = defaultConfig[SQLGetInfo] & [
         //add additional non-configuration handled overrides here
@@ -63,110 +63,7 @@ shared ODBCSQLDirect.Database = (dsn as text) as table =>
         //add additional non-configuration handled overrides here
         ],
 
-        // Build AstVisitor
-        // This record allows you to customize the generated SQL for certain
-        // operations. The most common usage is to define syntax for LIMIT/OFFSET operators 
-        // when TOP is not supported. 
-        // 
-        AstVisitor = [
-            LimitClause = (skip, take) =>
-            let
-                offset = if (skip <> null and skip > 0) then Text.Format("OFFSET #{0} ROWS", {skip}) else "",
-                limit = if (take <> null) then Text.Format("LIMIT #{0}", {take}) else ""
-            in
-                [
-                Text = Text.Format("#{0} #{1}", {offset, limit}),
-                Location = "AfterQuerySpecification"
-                ],
-            Constant =
-                    let
-                        Quote = each Text.Format("'#{0}'", { _ }),
-                        Cast = (value, typeName) => [
-                            Text = Text.Format("CAST(#{0} as #{1})", { value, typeName })
-                        ],
-                        Visitor = [
-                            // This is to work around parameters being converted to VARCHAR
-                            // and to work around driver crash when using TYPE_TIME parameters.
-                            NUMERIC = each Cast(_, "NUMERIC"),
-                            DECIMAL = each Cast(_, "DECIMAL"),
-                            INTEGER = each Cast(_, "INTEGER"),
-                            FLOAT = each Cast(_, "FLOAT"),
-                            REAL = each Cast(_, "REAL"),
-                            DOUBLE = each Cast(_, "DOUBLE"),
-                            DATE = each Cast(Quote(Date.ToText(_, "yyyy-MM-dd")), "DATE"),
-                            TEXT = each Cast(_, "WLONGVARCHAR"),
-                            TIMESTAMPTZ = each Cast(Quote(DateTime.ToText(_, "yyyy-MM-dd HH:mm:ss.sssssss")), "TIMESTAMP"),
-                            TIMETZ = each Cast(Quote(Time.ToText(_, "HH:mm:ss.sssssss")), "TIME"),
-                            UUID = each Cast(_, "GUID"),
-                            ORDER_STATUS = each Cast(_, "VARCHAR"),
-                            ORDER_TYPE = each Cast(_, "VARCHAR"),
-                            PAYMENT_BATCH_STATUS = each Cast(_, "VARCHAR"), 
-                            PAYMENT_STATUS = each Cast(_, "VARCHAR"),
-                            PAYMENT_TYPE = each Cast(_, "VARCHAR"),
-                            TRANSACTION_ACTIVITY_TYPE = each Cast(_, "VARCHAR")
-                        ]
-                    in
-                        (typeInfo, ast) => Record.FieldOrDefault(Visitor, typeInfo[TYPE_NAME], each null)(ast[Value])
-            ],
-            // SQLGetTypeInfo can be specified in two ways:
-            // 1. A #table() value that returns the same type information as an ODBC
-            //    call to SQLGetTypeInfo.
-            // 2. A function that accepts a table argument, and returns a table. The 
-            //    argument will contain the original results of the ODBC call to SQLGetTypeInfo.
-            //    Your function implementation can modify/add to this table.
-            //
-            // For details of the format of the types table parameter and expected return value,
-            // please see: https://docs.microsoft.com/en-us/sql/odbc/reference/syntax/sqlgettypeinfo-function
-            //
-            // The sample implementation provided here will simply output the original table
-            // to the user trace log, without any modification. 
-            SQLGetTypeInfo = (types) => 
-                if (EnableTraceOutput <> true) then types else
-                let
-                    // Outputting the entire table might be too large, and result in the value being truncated.
-                    // We can output a row at a time instead with Table.TransformRows()
-                    rows = Table.TransformRows(types, each Diagnostics.LogValue("SQLGetTypeInfo " & _[TYPE_NAME], _)),
-                    toTable = Table.FromRecords(rows)
-                in
-                    Value.ReplaceType(toTable, Value.Type(types)),         
-
-            // This is to work around the driver returning the deprecated
-            // TIMESTAMP, DATE and TIME instead of TYPE_TIMESTAMP, TYPE_DATE and TYPE_TIME
-            // for column metadata returned by SQLColumns. The column types also don't
-            // match the types that are returned by SQLGetTypeInfo.
-            SQLColumns = (catalogName, schemaName, tableName, columnName, source) =>
-                let
-                    OdbcSqlType.DATETIME = 9,
-                    OdbcSqlType.TYPE_DATE = 91,
-                    OdbcSqlType.TIME = 10,
-                    OdbcSqlType.TYPE_TIME = 92,
-                    OdbcSqlType.TIMESTAMP = 11,
-                    OdbcSqlType.TYPE_TIMESTAMP = 93,
-
-                    FixDataType = (dataType) =>
-                        if dataType = OdbcSqlType.DATETIME then
-                            OdbcSqlType.TYPE_DATE
-                        else if dataType = OdbcSqlType.TIME then
-                            OdbcSqlType.TYPE_TIME
-                        else if dataType = OdbcSqlType.TIMESTAMP then
-                            OdbcSqlType.TYPE_TIMESTAMP
-                        else
-                            dataType,
-                    Transform = Table.TransformColumns(source, { { "DATA_TYPE", FixDataType } })
-                in
-                    if (EnableTraceOutput <> true) then Transform else
-                    // the if statement conditions will force the values to evaluated/written to diagnostics
-                    if (Diagnostics.LogValue("SQLColumns.TableName", tableName) <> "***" and Diagnostics.LogValue("SQLColumns.ColumnName", columnName) <> "***") then
-                        let
-                            // Outputting the entire table might be too large, and result in the value being truncated.
-                            // We can output a row at a time instead with Table.TransformRows()
-                            rows = Table.TransformRows(Transform, each Diagnostics.LogValue("SQLColumns", _)),
-                            toTable = Table.FromRecords(rows)
-                        in
-                            Value.ReplaceType(toTable, Value.Type(Transform))
-                    else
-                        Transform,
-
+        
         //
         // Call to Odbc.DataSource
         //
@@ -178,30 +75,25 @@ shared ODBCSQLDirect.Database = (dsn as text) as table =>
             // When HierarchialNavigation is set to true, the navigation tree
             // will be organized by Database -> Schema -> Table. When set to false,
             // all tables will be displayed in a flat list using fully qualified names. 
-            HierarchicalNavigation = false,
+            HierarchicalNavigation = true, 
             //Prevent exposure of Native Query
             HideNativeQuery = true,
             //Allows the M engine to select a compatible data type when conversion between two specific numeric types is not declared as supported in the SQL_CONVERT_* capabilities.
-            SoftNumbers = true,
+            SoftNumbers = false,
             TolerateConcatOverflow = true,
             // These values should be set by previous steps
             CredentialConnectionString = CredentialConnectionString,
-            //Requires AstVisitor since Top is not supported in Postgres
-            AstVisitor = AstVisitor,
+
             SqlCapabilities = SqlCapabilities,
-            SQLGetInfo = SQLGetInfo,
-            SQLColumns = SQLColumns,
-            SQLGetTypeInfo = SQLGetTypeInfo
-            /*
-            ImplicitTypeConversions = ImplicitTypeConversions,
-            OnError = OnError,
-            */
+            SQLGetInfo = SQLGetInfo
+           // SQLColumns = SQLColumns,
+            //SQLGetTypeInfo = SQLGetTypeInfo
+      
         ])
         
     in OdbcDatasource;
 
 
-// Data Source Kind description
 ODBCSQLDirect = [
  // Test Connection
     TestConnection = (dataSourcePath) => 
@@ -213,8 +105,8 @@ ODBCSQLDirect = [
  // Authentication Type
     Authentication = [
         UsernamePassword = [],
-        Windows = [],
         Implicit = []
+       ,Windows = []
     ],
     Label = Extension.LoadString("DataSourceLabel")
 ];

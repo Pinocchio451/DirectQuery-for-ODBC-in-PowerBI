@@ -1034,6 +1034,8 @@ SQL_CVT =
         SQL_TSI_MONTH = 0x00000040,
         SQL_TSI_QUARTER = 0x00000080,
         SQL_TSI_YEAR = 0x00000100
+
+
     ],
 
     SQL_AF = 

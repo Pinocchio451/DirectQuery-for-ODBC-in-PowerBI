@@ -3,5 +3,6 @@
 //Testing Not developed further because of Visual Studio / PowerBI Architecture mismatch (32 vs 64 bit.)
 //https://github.com/Microsoft/DataConnectors/issues/158
 let
+    Source = ODBCMySQLDirect.Database("Example ODBC Source")
 in
     Source

@@ -79,6 +79,7 @@ shared ODBCMySQLDirect.Database = (dsn as text) as table =>
                 Location = "AfterQuerySpecification"
                 ]
             ],
+
             // SQLGetTypeInfo can be specified in two ways:
             // 1. A #table() value that returns the same type information as an ODBC
             //    call to SQLGetTypeInfo.
@@ -92,58 +93,6 @@ shared ODBCMySQLDirect.Database = (dsn as text) as table =>
             // The sample implementation provided here will simply output the original table
             // to the user trace log, without any modification. 
 
-/*
-            SQLGetTypeInfo = (types) => 
-                if (EnableTraceOutput <> true) then types else
-                let
-                    // Outputting the entire table might be too large, and result in the value being truncated.
-                    // We can output a row at a time instead with Table.TransformRows()
-                    rows = Table.TransformRows(types, each Diagnostics.LogValue("SQLGetTypeInfo " & _[TYPE_NAME], _)),
-                    toTable = Table.FromRecords(rows)
-                in
-                    Value.ReplaceType(toTable, Value.Type(types)),         
-*/
-
-            // This is to work around the driver returning the deprecated
-            // TIMESTAMP, DATE and TIME instead of TYPE_TIMESTAMP, TYPE_DATE and TYPE_TIME
-            // for column metadata returned by SQLColumns. The column types also don't
-            // match the types that are returned by SQLGetTypeInfo.
-
-/*
-            SQLColumns = (catalogName, schemaName, tableName, columnName, source) =>
-                let
-                    OdbcSqlType.DATETIME = 9,
-                    OdbcSqlType.TYPE_DATE = 91,
-                    OdbcSqlType.TIME = 10,
-                    OdbcSqlType.TYPE_TIME = 92,
-                    OdbcSqlType.TIMESTAMP = 11,
-                    OdbcSqlType.TYPE_TIMESTAMP = 93,
-
-                    FixDataType = (dataType) =>
-                        if dataType = OdbcSqlType.DATETIME then
-                            OdbcSqlType.TYPE_DATE
-                        else if dataType = OdbcSqlType.TIME then
-                            OdbcSqlType.TYPE_TIME
-                        else if dataType = OdbcSqlType.TIMESTAMP then
-                            OdbcSqlType.TYPE_TIMESTAMP
-                        else
-                            dataType,
-                    Transform = Table.TransformColumns(source, { { "DATA_TYPE", FixDataType } })
-                in
-                    if (EnableTraceOutput <> true) then Transform else
-                    // the if statement conditions will force the values to evaluated/written to diagnostics
-                    if (Diagnostics.LogValue("SQLColumns.TableName", tableName) <> "***" and Diagnostics.LogValue("SQLColumns.ColumnName", columnName) <> "***") then
-                        let
-                            // Outputting the entire table might be too large, and result in the value being truncated.
-                            // We can output a row at a time instead with Table.TransformRows()
-                            rows = Table.TransformRows(Transform, each Diagnostics.LogValue("SQLColumns", _)),
-                            toTable = Table.FromRecords(rows)
-                        in
-                            Value.ReplaceType(toTable, Value.Type(Transform))
-                    else
-                        Transform,
-
-*/
 
         //
         // Call to Odbc.DataSource

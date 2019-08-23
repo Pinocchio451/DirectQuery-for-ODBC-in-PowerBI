@@ -52,15 +52,78 @@ shared ODBCPostgresDirect.Database = (dsn as text) as table =>
         defaultConfig = BuildOdbcConfig(),
     
         SqlCapabilities = defaultConfig[SqlCapabilities] & [
-        //add additional non-configuration handled overrides here
-        GroupByCapabilities = 2
-        ],
-        SQLGetInfo = defaultConfig[SQLGetInfo] & [
-        //add additional non-configuration handled overrides here
-        SQL_AGGREGATE_FUNCTIONS = 0xFF
+            //add additional non-configuration handled overrides here
+            GroupByCapabilities = 2
+            ],
+            SQLGetInfo = defaultConfig[SQLGetInfo] & [
+            //add additional non-configuration handled overrides here
+            SQL_AGGREGATE_FUNCTIONS = 0xFF,
+            SQL_TIMEDATE_ADD_INTERVALS =
+                    let
+                        // add all functions to driver
+                        driverDefault = {
+                            SQL_TSI[SQL_TSI_FRAC_SECOND],
+                            SQL_TSI[SQL_TSI_SECOND],
+                            SQL_TSI[SQL_TSI_MINUTE],
+                            SQL_TSI[SQL_TSI_HOUR],
+                            SQL_TSI[SQL_TSI_DAY],
+                            SQL_TSI[SQL_TSI_WEEK],
+                            SQL_TSI[SQL_TSI_MONTH],
+                            SQL_TSI[SQL_TSI_QUARTER],
+                            SQL_TSI[SQL_TSI_YEAR]
+                        }
+                    in
+                        Flags(driverDefault),
+            SQL_TIMEDATE_DIFF_INTERVALS = 
+                   let
+                        // add all functions to driver
+                        driverDefault = {
+                            SQL_TSI[SQL_TSI_FRAC_SECOND],
+                            SQL_TSI[SQL_TSI_SECOND],
+                            SQL_TSI[SQL_TSI_MINUTE],
+                            SQL_TSI[SQL_TSI_HOUR],
+                            SQL_TSI[SQL_TSI_DAY],
+                            SQL_TSI[SQL_TSI_WEEK],
+                            SQL_TSI[SQL_TSI_MONTH],
+                            SQL_TSI[SQL_TSI_QUARTER],
+                            SQL_TSI[SQL_TSI_YEAR]
+                        }
+                    in
+                        Flags(driverDefault),
+
+            SQL_TIMEDATE_FUNCTIONS = 
+                   let
+                        // add all functions to driver
+                        driverDefault = {
+                            SQL_FN_TD[SQL_FN_TD_NOW],
+                            SQL_FN_TD[SQL_FN_TD_CURDATE],
+                            SQL_FN_TD[SQL_FN_TD_DAYOFMONTH],
+                            SQL_FN_TD[SQL_FN_TD_DAYOFWEEK],
+                            SQL_FN_TD[SQL_FN_TD_DAYOFYEAR],
+                            SQL_FN_TD[SQL_FN_TD_MONTH],
+                            SQL_FN_TD[SQL_FN_TD_QUARTER],
+                            SQL_FN_TD[SQL_FN_TD_WEEK],
+                            SQL_FN_TD[SQL_FN_TD_YEAR],
+                            SQL_FN_TD[SQL_FN_TD_CURTIME],
+                            SQL_FN_TD[SQL_FN_TD_MINUTE],
+                            SQL_FN_TD[SQL_FN_TD_SECOND],
+                            SQL_FN_TD[SQL_FN_TD_TIMESTAMPADD],
+                            SQL_FN_TD[SQL_FN_TD_TIMESTAMPDIFF],
+                            SQL_FN_TD[SQL_FN_TD_DAYNAME],
+                            SQL_FN_TD[SQL_FN_TD_MONTHNAME],
+                            SQL_FN_TD[SQL_FN_TD_CURRENT_DATE],
+                            SQL_FN_TD[SQL_FN_TD_CURRENT_TIME],
+                            SQL_FN_TD[SQL_FN_TD_CURRENT_TIMESTAMP],
+                            SQL_FN_TD[SQL_FN_TD_EXTRACT]
+                        }
+                    in
+                        Flags(driverDefault)
+        
         ],
         SQLGetFunctions = defaultConfig[SQLGetFunctions] & [
         //add additional non-configuration handled overrides here
+
+
         ],
 
         // Build AstVisitor
@@ -69,6 +132,7 @@ shared ODBCPostgresDirect.Database = (dsn as text) as table =>
         // when TOP is not supported. 
         // 
         AstVisitor = [
+            // Fix for Offset / Limit 
             LimitClause = (skip, take) =>
             let
                 offset = if (skip <> null and skip > 0) then Text.Format("OFFSET #{0} ROWS", {skip}) else "",
@@ -78,6 +142,7 @@ shared ODBCPostgresDirect.Database = (dsn as text) as table =>
                 Text = Text.Format("#{0} #{1}", {offset, limit}),
                 Location = "AfterQuerySpecification"
                 ],
+            // Fix for Type Casts
             Constant =
                     let
                         Quote = each Text.Format("'#{0}'", { _ }),
@@ -97,17 +162,12 @@ shared ODBCPostgresDirect.Database = (dsn as text) as table =>
                             TEXT = each Cast(_, "WLONGVARCHAR"),
                             TIMESTAMPTZ = each Cast(Quote(DateTime.ToText(_, "yyyy-MM-dd HH:mm:ss.sssssss")), "TIMESTAMP"),
                             TIMETZ = each Cast(Quote(Time.ToText(_, "HH:mm:ss.sssssss")), "TIME"),
-                            UUID = each Cast(_, "GUID"),
-                            ORDER_STATUS = each Cast(_, "VARCHAR"),
-                            ORDER_TYPE = each Cast(_, "VARCHAR"),
-                            PAYMENT_BATCH_STATUS = each Cast(_, "VARCHAR"), 
-                            PAYMENT_STATUS = each Cast(_, "VARCHAR"),
-                            PAYMENT_TYPE = each Cast(_, "VARCHAR"),
-                            TRANSACTION_ACTIVITY_TYPE = each Cast(_, "VARCHAR")
+                            UUID = each Cast(_, "GUID")
                         ]
                     in
                         (typeInfo, ast) => Record.FieldOrDefault(Visitor, typeInfo[TYPE_NAME], each null)(ast[Value])
-            ],
+           ],
+
             // SQLGetTypeInfo can be specified in two ways:
             // 1. A #table() value that returns the same type information as an ODBC
             //    call to SQLGetTypeInfo.
@@ -120,6 +180,7 @@ shared ODBCPostgresDirect.Database = (dsn as text) as table =>
             //
             // The sample implementation provided here will simply output the original table
             // to the user trace log, without any modification. 
+            
             SQLGetTypeInfo = (types) => 
                 if (EnableTraceOutput <> true) then types else
                 let
@@ -134,6 +195,7 @@ shared ODBCPostgresDirect.Database = (dsn as text) as table =>
             // TIMESTAMP, DATE and TIME instead of TYPE_TIMESTAMP, TYPE_DATE and TYPE_TIME
             // for column metadata returned by SQLColumns. The column types also don't
             // match the types that are returned by SQLGetTypeInfo.
+            
             SQLColumns = (catalogName, schemaName, tableName, columnName, source) =>
                 let
                     OdbcSqlType.DATETIME = 9,
@@ -383,4 +445,11 @@ Diagnostics.LogValue = if (EnableTraceOutput) then Diagnostics[LogValue] else (p
 // OdbcConstants contains numeric constants from the ODBC header files, and a 
 // helper function to create bitfield values.
 ODBC = Extension.LoadFunction("OdbcConstants.pqm");
-Odbc.Flags = ODBC[Flags];
+Flags = ODBC[Flags];
+SQL_FN_STR = ODBC[SQL_FN_STR];
+SQL_SC = ODBC[SQL_SC];
+SQL_GB = ODBC[SQL_GB];
+SQL_FN_NUM = ODBC[SQL_FN_NUM];
+SQL_TSI = ODBC[SQL_TSI];
+SQL_FN_TD = ODBC[SQL_FN_TD];
+SQL_SDF = ODBC[SQL_SDF];

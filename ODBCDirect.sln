@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.168
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{4DF76451-A46A-4C0B-BE03-459FAAFA07E6}") = "ODBCMySQLDirect", "ODBCMySQLDirect\ODBCMySQLDirect.mproj", "{75BF9BCF-EAE2-45DB-A23D-D3BC7C38A211}"
 EndProject
@@ -11,22 +11,20 @@ Project("{4DF76451-A46A-4C0B-BE03-459FAAFA07E6}") = "ODBCSQLDirect", "ODBCSQLDir
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x86 = Debug|x86
-		Release|x86 = Release|x86
+		Build|x64 = Build|x64
+		Build|x86 = Build|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{75BF9BCF-EAE2-45DB-A23D-D3BC7C38A211}.Debug|x86.ActiveCfg = Debug|x86
-		{75BF9BCF-EAE2-45DB-A23D-D3BC7C38A211}.Debug|x86.Build.0 = Debug|x86
-		{75BF9BCF-EAE2-45DB-A23D-D3BC7C38A211}.Release|x86.ActiveCfg = Release|x86
-		{75BF9BCF-EAE2-45DB-A23D-D3BC7C38A211}.Release|x86.Build.0 = Release|x86
-		{22CE2C1D-4F1E-4D41-AA3E-2BFD5E4C488D}.Debug|x86.ActiveCfg = Debug|x86
-		{22CE2C1D-4F1E-4D41-AA3E-2BFD5E4C488D}.Debug|x86.Build.0 = Debug|x86
-		{22CE2C1D-4F1E-4D41-AA3E-2BFD5E4C488D}.Release|x86.ActiveCfg = Release|x86
-		{22CE2C1D-4F1E-4D41-AA3E-2BFD5E4C488D}.Release|x86.Build.0 = Release|x86
-		{9783305D-C886-4492-BE6E-21ECE08158BD}.Debug|x86.ActiveCfg = Debug|x86
-		{9783305D-C886-4492-BE6E-21ECE08158BD}.Debug|x86.Build.0 = Debug|x86
-		{9783305D-C886-4492-BE6E-21ECE08158BD}.Release|x86.ActiveCfg = Release|x86
-		{9783305D-C886-4492-BE6E-21ECE08158BD}.Release|x86.Build.0 = Release|x86
+		{75BF9BCF-EAE2-45DB-A23D-D3BC7C38A211}.Build|x64.ActiveCfg = Release|x86
+		{75BF9BCF-EAE2-45DB-A23D-D3BC7C38A211}.Build|x86.ActiveCfg = Release|x86
+		{75BF9BCF-EAE2-45DB-A23D-D3BC7C38A211}.Build|x86.Build.0 = Release|x86
+		{22CE2C1D-4F1E-4D41-AA3E-2BFD5E4C488D}.Build|x64.ActiveCfg = Release|x86
+		{22CE2C1D-4F1E-4D41-AA3E-2BFD5E4C488D}.Build|x64.Build.0 = Release|x86
+		{22CE2C1D-4F1E-4D41-AA3E-2BFD5E4C488D}.Build|x86.ActiveCfg = Release|x86
+		{22CE2C1D-4F1E-4D41-AA3E-2BFD5E4C488D}.Build|x86.Build.0 = Release|x86
+		{9783305D-C886-4492-BE6E-21ECE08158BD}.Build|x64.ActiveCfg = Release|x86
+		{9783305D-C886-4492-BE6E-21ECE08158BD}.Build|x86.ActiveCfg = Release|x86
+		{9783305D-C886-4492-BE6E-21ECE08158BD}.Build|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

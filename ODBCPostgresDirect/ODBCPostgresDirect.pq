@@ -252,8 +252,8 @@ shared ODBCPostgresDirect.Database = (dsn as text) as table =>
             AstVisitor = AstVisitor,
             SqlCapabilities = SqlCapabilities,
             SQLGetInfo = SQLGetInfo,
-            SQLColumns = SQLColumns,
-            SQLGetTypeInfo = SQLGetTypeInfo
+            SQLGetTypeInfo = SQLGetTypeInfo,
+            SQLColumns = SQLColumns            
             /*
             ImplicitTypeConversions = ImplicitTypeConversions,
             OnError = OnError,
@@ -284,7 +284,7 @@ ODBCPostgresDirect = [
 ODBCPostgresDirect.UI = [
     Category = "Database",
     ButtonText = { Extension.LoadString("ButtonTitle"), Extension.LoadString("ButtonHelp") },
-    LearnMoreUrl = "https://powerbi.microsoft.com/",
+    LearnMoreUrl = "https://github.com/sgoley/DirectQuery-for-ODBC-in-PowerBI",
     SourceImage = ODBCPostgresDirect.Icons,
     SourceTypeImage = ODBCPostgresDirect.Icons,
     // This is for Direct Query Support
